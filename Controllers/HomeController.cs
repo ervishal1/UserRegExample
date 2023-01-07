@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using UserRegExample.Models;
+using UserRegExample.ViewModels;
 
 namespace UserRegExample.Controllers
 {
@@ -19,10 +20,11 @@ namespace UserRegExample.Controllers
 
         public HomeController(ILogger<HomeController> logger,
             UserManager<ApplicationUser> userManager,
-            RoleManager<IdentityRole> _roleManager)
+            RoleManager<IdentityRole> roleManager)
         {
             _logger = logger;
             _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         public async Task<IActionResult> Index()
@@ -57,7 +59,35 @@ namespace UserRegExample.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Creating Roles
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public IActionResult CreateRole()
+        {
+            return View();
+        }
 
+        [HttpGet]
+        public IActionResult IndexRole()
+        {
+            var roles = _roleManager.Roles.ToList();
+            List<CreateRoleViewModel> vm = new List<CreateRoleViewModel>();
+
+            foreach (var item in roles)
+            {
+                vm.Add(new CreateRoleViewModel() { Name = item.Name });
+            }
+            return View(vm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateRole(CreateRoleViewModel vm)
+        {
+            var result = await _roleManager.CreateAsync(new IdentityRole(vm.Name));
+            return RedirectToAction("IndexRole");
+        }
 
         public IActionResult Privacy()
         {
