@@ -69,6 +69,47 @@ namespace UserRegExample.Controllers
             return View();
         }
 
+        public async Task<IActionResult> DetailsRole(string Id)
+        {
+            var role = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Id == Id);
+            CreateRoleViewModel vm = new CreateRoleViewModel()
+            {
+                Id = role.Id,
+                Name = role.Name
+            };
+            return View(vm);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditRole(string Id)
+        {
+            var role = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Id == Id);
+            CreateRoleViewModel vm = new CreateRoleViewModel() { Id = role.Id,Name = role.Name };
+            return View(vm);
+        }
+
+        public async Task<IActionResult> DeleteRole(string Id)
+        {
+            var role = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Id == Id);
+            CreateRoleViewModel vm = new CreateRoleViewModel() { Id = role.Id, Name = role.Name };
+            return View(vm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditRole(CreateRoleViewModel vm)
+        {
+            var role = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Id == vm.Id);
+            role.Name = vm.Name;
+            var result = await _roleManager.UpdateAsync(role);
+
+            if(result.Succeeded)
+            {
+                return RedirectToAction("IndexRole");
+            }   
+            return View(vm);
+        }
+
+
         [HttpGet]
         public IActionResult IndexRole()
         {
@@ -77,16 +118,31 @@ namespace UserRegExample.Controllers
 
             foreach (var item in roles)
             {
-                vm.Add(new CreateRoleViewModel() { Name = item.Name });
+                vm.Add(new CreateRoleViewModel() { Name = item.Name, Id = item.Id });
             }
             return View(vm);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> CreateRole(CreateRoleViewModel vm)
         {
             var result = await _roleManager.CreateAsync(new IdentityRole(vm.Name));
             return RedirectToAction("IndexRole");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteRole(CreateRoleViewModel vm)
+        {
+            var role = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Id == vm.Id);
+            role.Name = vm.Name;
+            var result = await _roleManager.DeleteAsync(role);
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction("IndexRole");
+            }
+            return View(vm);
         }
 
         public IActionResult Privacy()
