@@ -38,10 +38,14 @@ namespace UserRegExample.Controllers
         public async Task<IActionResult> Edit(string id)
         {
             ManageUsersRole UserRoles = new ManageUsersRole();
+             
 
             var user = _context.Users.Where(x => x.Id == id).SingleOrDefault();
             var userInRole = _context.UserRoles.Where(x => x.UserId == id).Select(x => x.RoleId).ToList();
+            var userInClaims = _context.UserClaims.Where(x => x.UserId == id).Select(x => x.ClaimValue).ToList();
 
+
+            UserRoles.AppUser = user;
             UserRoles.roles = await _roleManager.Roles.Select(x => new SelectListItem()
             {
                 Text = x.Name,
@@ -49,7 +53,13 @@ namespace UserRegExample.Controllers
                 Selected = userInRole.Contains(x.Id)
             }).ToListAsync();
 
-            UserRoles.AppUser = user;
+            UserRoles.AppClaims = ClaimStore.All.Select(x => new SelectListItem()
+            {
+                Text = x.Type,
+                Value = x.Value,
+                Selected = userInClaims.Contains(x.Value)
+
+            }).ToList();
 
             return View(UserRoles);
         }
@@ -77,6 +87,30 @@ namespace UserRegExample.Controllers
                 {
                     RoleId = item,
                     UserId = model.AppUser.Id
+                });
+            }
+
+            var selectedClaimId = model.AppClaims.Where(x => x.Selected).Select(x => x.Value);
+            var alradyExistClaims = _context.UserClaims.Where(x => x.UserId == model.AppUser.Id).Select(x => x.Id.ToString()).ToList();
+            var toAddClaim = selectedClaimId.Except(alradyExistClaims);
+            var toRemoveClaims = alradyExistClaims.Except(selectedClaimId);
+
+            foreach (var item in toRemoveClaims)
+            {
+                _context.UserClaims.Remove(new IdentityUserClaim<string>
+                {
+                    Id = Convert.ToInt32(item),
+                    UserId = model.AppUser.Id
+                });
+            }
+
+            foreach (var item in toAddClaim)
+            {
+                _context.UserClaims.Add(new IdentityUserClaim<string>
+                {
+                    UserId = model.AppUser.Id,
+                    ClaimValue = item,
+                    ClaimType = item
                 });
             }
 

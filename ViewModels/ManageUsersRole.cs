@@ -11,5 +11,6 @@ namespace UserRegExample.ViewModels
     {
         public ApplicationUser AppUser { get; set; }
         public List<SelectListItem> roles { get; set; }
+        public List<SelectListItem> AppClaims { get; set; }
     }
 }

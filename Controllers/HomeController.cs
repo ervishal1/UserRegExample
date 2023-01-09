@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -123,7 +124,7 @@ namespace UserRegExample.Controllers
             return View(vm);
         }
 
-
+        [Authorize(Policy = "CreateRolePolicy")]
         [HttpPost]
         public async Task<IActionResult> CreateRole(CreateRoleViewModel vm)
         {

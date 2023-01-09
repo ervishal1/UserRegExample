@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using UserRegExample.Data;
 using UserRegExample.Models;
+using UserRegExample.Repo;
 
 namespace UserRegExample
 {
@@ -33,11 +34,17 @@ namespace UserRegExample
             services.AddDefaultIdentity<ApplicationUser>().AddRoles<IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
             //services.AddTransient<IEmailSender, SendMail>();
 
+            services.AddAuthorization(options => {
+                options.AddPolicy("CreateRolePolicy", policy => policy.RequireClaim("Create Role"));
+            });
+
             services.Configure<IdentityOptions>(options =>
             {
                 options.Password.RequiredLength = 8;
                 options.SignIn.RequireConfirmedAccount = true;
             });
+
+            services.AddTransient<IEmployee, EmployeeRepo>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
