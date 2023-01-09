@@ -31,7 +31,7 @@ namespace UserRegExample
             services.AddControllersWithViews();
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultString")));
             services.AddDefaultIdentity<ApplicationUser>().AddRoles<IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
-            services.AddTransient<IEmailSender, SendMail>();
+            //services.AddTransient<IEmailSender, SendMail>();
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -64,7 +64,7 @@ namespace UserRegExample
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Test}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
         }
