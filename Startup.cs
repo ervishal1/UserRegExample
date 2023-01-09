@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UserRegExample.Data;
+using UserRegExample.GenericRepo;
 using UserRegExample.Models;
 using UserRegExample.Repo;
 
@@ -45,6 +46,7 @@ namespace UserRegExample
             });
 
             services.AddTransient<IEmployee, EmployeeRepo>();
+            services.AddTransient(typeof(IRepo<>), typeof(Repository<>));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
