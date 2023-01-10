@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UserRegExample.Data;
 
 namespace UserRegExample.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230109150953_Fifth")]
+    partial class Fifth
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -243,21 +245,6 @@ namespace UserRegExample.Migrations
                     b.ToTable("Employees");
                 });
 
-            modelBuilder.Entity("UserRegExample.Models.Facility", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Facilitys");
-                });
-
             modelBuilder.Entity("UserRegExample.Models.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -295,6 +282,9 @@ namespace UserRegExample.Migrations
                     b.Property<int>("NoOfBeds")
                         .HasColumnType("int");
 
+                    b.Property<int>("RoomFacilityId")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("RoomFare")
                         .HasColumnType("decimal(18,2)");
 
@@ -309,6 +299,8 @@ namespace UserRegExample.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("RoomFacilityId");
+
                     b.HasIndex("RoomTypeId");
 
                     b.ToTable("Rooms");
@@ -321,17 +313,13 @@ namespace UserRegExample.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("FacilityId")
-                        .HasColumnType("int");
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RoomId")
-                        .HasColumnType("int");
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("FacilityId");
-
-                    b.HasIndex("RoomId");
 
                     b.ToTable("RoomFacilities");
                 });
@@ -407,24 +395,15 @@ namespace UserRegExample.Migrations
 
             modelBuilder.Entity("UserRegExample.Models.Room", b =>
                 {
+                    b.HasOne("UserRegExample.Models.RoomFacility", "TypeOfFacility")
+                        .WithMany()
+                        .HasForeignKey("RoomFacilityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("UserRegExample.Models.RoomType", "TypeOfRoom")
                         .WithMany()
                         .HasForeignKey("RoomTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("UserRegExample.Models.RoomFacility", b =>
-                {
-                    b.HasOne("UserRegExample.Models.Facility", "Facility")
-                        .WithMany()
-                        .HasForeignKey("FacilityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("UserRegExample.Models.Room", "Room")
-                        .WithMany("Facilities")
-                        .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

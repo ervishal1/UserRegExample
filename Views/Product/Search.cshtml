@@ -1,0 +1,56 @@
+﻿@model IEnumerable<UserRegExample.Models.Product>
+
+@{
+    ViewData["Title"] = "Search";
+}
+
+<h1>Search</h1>
+
+<form asp-action="Search">
+    <div class="form-group">
+        <label class="col-form-label">Search Product Name:</label>
+        <input class="form-control" type="text" name="searchProductName" />
+        <input  class="btn btn-success mt-2" type="submit" value="Search" />
+    </div>
+
+    @if (ViewBag.products != null)
+    {
+        <span class="alert alert-danger">@ViewBag.products</span>
+    }
+<div>
+    @if (Model != null)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Id)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Title)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Description)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+</form> 

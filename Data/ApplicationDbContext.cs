@@ -15,8 +15,11 @@ namespace UserRegExample.Data
         {
         }
         public DbSet<Employee> Employees { get; set; }
+
+        public DbSet<Facility> Facilitys { get; set; }
         public DbSet<RoomFacility> RoomFacilities { get; set; }
         public DbSet<RoomType> RoomTypes { get; set; }
         public DbSet<Room> Rooms { get; set; }
+        public DbSet<Product> Products { get; set; }
     }
 }
