@@ -10,7 +10,7 @@ namespace UserRegExample.ViewModels
     public class ManageUsersRole
     {
         public ApplicationUser AppUser { get; set; }
-        public List<SelectListItem> roles { get; set; }
-        public List<SelectListItem> AppClaims { get; set; }
+        public List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem> roles { get; set; }
+        public List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem> AppClaims { get; set; }
     }
 }
