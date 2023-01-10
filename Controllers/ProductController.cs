@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UserRegExample.Data;
 using UserRegExample.GenericRepo;
+using UserRegExample.Helper;
 using UserRegExample.Models;
 
 namespace UserRegExample.Controllers
@@ -20,10 +22,11 @@ namespace UserRegExample.Controllers
             _Context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index(int pageNumber = 1)
         {
-            var Product = _Repo.GetAll();
-            return View(Product);
+            int pageSize = 3;
+            var product = _Context.Products.AsNoTracking();
+            return View(await PaginatedList<Product>.CreateAsync(product,pageNumber,pageSize));
         }
 
         [HttpGet]

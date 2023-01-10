@@ -17,7 +17,6 @@ namespace UserRegExample.Models
         public string RoomPictureUri { get; set; }
         public RoomType TypeOfRoom { get; set; }
         public int RoomTypeId { get; set; }
-        public RoomFacility TypeOfFacility { get; set; }
-        public int RoomFacilityId { get; set; }
+        public ICollection<RoomFacility> Facilities { get; set; }
     }
 }
